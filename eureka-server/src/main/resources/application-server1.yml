@@ -1,0 +1,13 @@
+server:
+  port: 8001 #指定运行端口
+spring:
+  application:
+    name: eureka-server #指定服务名称
+eureka:
+  instance:
+    hostname: eurekaserver1.com #指定主机地址
+  client:
+    fetch-registry: false #指定是否要从注册中心获取服务（注册中心不需要开启）
+    register-with-eureka: false #指定是否要注册到注册中心（注册中心不需要开启）
+    service-url:
+      defaultZone: http://eurekaserver2.com:8002/eureka/,http://test:test@security-eurekaserver.com:8003/eureka/ #配置注册中心地址
