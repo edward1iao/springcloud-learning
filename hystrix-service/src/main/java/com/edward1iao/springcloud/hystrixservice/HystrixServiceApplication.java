@@ -26,6 +26,7 @@ public class HystrixServiceApplication {
     /**
      * hystrix dashboard面板监控时才需要以下配置
      * 暴露hystrix监控端点
+     * 如果不配置会导致监控面板无数据且出现Unable to connect to Command Metric Stream
      * @return
      */
     @Bean
