@@ -12,6 +12,7 @@
         <module>eureka-server</module>
         <module>data-service</module>
         <module>ribbon-service</module>
+        <module>hystrix-service</module>
     </modules>
     <packaging>pom</packaging>
 
