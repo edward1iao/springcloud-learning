@@ -8,6 +8,8 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>eureka-security-server</module>
+        <module>eureka-client</module>
+        <module>eureka-server</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -36,4 +38,18 @@
         </dependencies>
     </dependencyManagement>
 
+    <build>
+        <plugins>
+            <!-- 这一项如果不配置，会导致java编译项目采用默认配置，如1.5，会导致编写代码时显示部分新语法不兼容-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
