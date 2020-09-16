@@ -1,0 +1,13 @@
+server:
+  port: 8202 #运行端口号
+spring:
+  application:
+    name: data-service #服务名称
+eureka:
+  client:
+    register-with-eureka: true #注册到Eureka的注册中心
+    fetch-registry: true #获取注册实例列表
+    service-url:
+      defaultZone: http://eurekaserver2.com:8002/eureka/,http://eurekaserver1.com:8001/eureka/,http://test:test@security-eurekaserver.com:8003/eureka/  #配置注册中心地址
+
+
