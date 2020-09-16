@@ -14,6 +14,7 @@
         <module>ribbon-service</module>
         <module>hystrix-service</module>
         <module>feign-service</module>
+        <module>hystrix-dashboard</module>
     </modules>
     <packaging>pom</packaging>
 

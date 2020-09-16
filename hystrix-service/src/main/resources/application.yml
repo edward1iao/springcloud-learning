@@ -11,3 +11,5 @@ eureka:
     fetch-registry: true #获取注册实例列表
 service-url:
   data-service-url: http://data-service
+
+

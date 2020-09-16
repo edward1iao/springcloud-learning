@@ -1,0 +1,15 @@
+server:
+  port: 8601
+spring:
+  application:
+    name: hystrix-dashboard
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eurekaserver1.com:8001/eureka/,http://eurekaserver2.com:8002/eureka/,http://test:test@security-eurekaserver.com:8003/eureka/  #配置注册中心地址
+
+# 下列配置用于防止代理流不在被允许范围
+# http://localhost:8401/actuator/hystrix.stream is not in the allowed list of proxy host names. If it should be allowed add it to hystrix.dashboard.proxyStreamAllowList.
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: "*"
