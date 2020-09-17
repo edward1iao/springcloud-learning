@@ -16,6 +16,7 @@
         <module>feign-service</module>
         <module>hystrix-dashboard</module>
         <module>turbine-service</module>
+        <module>zuul-proxy</module>
     </modules>
     <packaging>pom</packaging>
 
