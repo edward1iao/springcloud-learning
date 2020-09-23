@@ -1,0 +1,17 @@
+server:
+  port: 9302
+spring:
+  application:
+    name: admin-security-server
+  security:
+    user:
+      name: test
+      password: test
+  boot: #不显示admin-security-server的监控信息
+    admin:
+      discovery:
+        ignored-services: ${spring.application.name}
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eurekaserver1.com:8001/eureka/,http://eurekaserver2.com:8002/eureka/,http://test:test@security-eurekaserver.com:8003/eureka/

@@ -131,7 +131,9 @@ eureka服务器本地测试需要通过host设置不同域名，不然会识别�
 
 eureka普通注册与安全验证注册可以并存
 
-eureka服务端引入安全认证依赖需要同时引入hystrix的依赖，不然会报错，同时服务端如果引入了安全认证依赖，则默认开起了安全认证
+eureka服务端引入安全认证依赖需要同时引入hystrix的依赖，不然会报错
+
+eureka服务端如果引入了安全认证依赖，则默认开起了安全认证，此时如果不配置用户名及密码，则会随机生成，且所有客户端注册需要进行安全认证
 
 eureka安全认证服务端需要配置spring.security.user.name|password,eureka安全认证客户端认证地址则为http://[name]:[password]@host:port/eureka/
 
@@ -405,6 +407,115 @@ Zuul在请求路由时，不会设置最初的host头信息，可以设置zuul.a
 ## SpringCloud Bus (消息总线)
 
 用于传播集群状态变化的消息总线，使用轻量级消息代理链接分布式系统中的节点，可以用来动态刷新集群中的服务配置。
+
+
+
+## SpringBoot Admin(微服务应用监控)
+
+SpringBoot应用可以通过Actuator来暴露应用运行过程中的各项指标，Spring Boot Admin通过这些指标来监控SpringBoot应用，然后通过图形化界面呈现出来。Spring Boot Admin不仅可以监控单体应用，还可以和Spring Cloud的注册中心相结合来监控微服务应用。
+
+Spring Boot Admin 可以提供应用的以下监控信息：
+
+- 监控应用运行过程中的概览信息；
+- 度量指标信息，比如JVM、Tomcat及进程信息；
+- 环境变量信息，比如系统属性、系统环境变量以及应用配置信息；
+- 查看所有创建的Bean信息；
+- 查看应用中的所有配置信息；
+- 查看应用运行日志信息；
+- 查看JVM信息；
+- 查看可以访问的Web端点；
+- 查看HTTP跟踪信息。
+
+#### 项目相关
+
+```
+eureka-server 服务器 通过server1、server2配置文件启动
+eureka-security-server 带安全验证的服务器
+data-service 数据服务 通过server1配置文件启动 用于区分无配置的监控
+admin-server 监控服务器
+admin-security-server 带安全认证的监控服务器
+admin-client 监控客户端
+```
+
+#### 父类新增配置参数
+
+```
+<spring-boot-admin.version>2.3.0</spring-boot-admin.version>
+```
+
+#### 依赖
+
+##### 服务器依赖（同上服务器依赖）
+
+##### 数据服务依赖（同上数据服务依赖）
+
+##### 监控服务器依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>de.codecentric</groupId>
+    <artifactId>spring-boot-admin-starter-server</artifactId>
+    <version>${spring-boot-admin.version}</version>
+</dependency>
+```
+
+##### 带安全认证的监控服务器
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>de.codecentric</groupId>
+    <artifactId>spring-boot-admin-starter-server</artifactId>
+    <version>${spring-boot-admin.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
+##### 监控客户端
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>de.codecentric</groupId>
+    <artifactId>spring-boot-admin-starter-client</artifactId>
+    <version>${spring-boot-admin.version}</version>
+</dependency>
+```
+
+#### 注意点
+
+
+
+
+
+
+
+
 
 
 
