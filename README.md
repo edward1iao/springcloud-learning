@@ -404,6 +404,8 @@ Zuul在请求路由时，不会设置最初的host头信息，可以设置zuul.a
 
 集中配置管理工具，分布式系统中统一的外部配置管理，默认使用Git来存储配置，可以支持客户端配置的刷新及加密、解密操作。
 
+
+
 ## SpringCloud Bus (消息总线)
 
 用于传播集群状态变化的消息总线，使用轻量级消息代理链接分布式系统中的节点，可以用来动态刷新集群中的服务配置。
@@ -509,13 +511,64 @@ admin-client 监控客户端
 
 #### 注意点
 
+@EnableAdminServer 通过注解开启监控服务功能，如果配置了注册服务器，则监控客户端不需要配置监控服务端地址，监控服务端会通过注册服务器获取所有服务，通过actuator进行监控。
 
+监控服务器通过引入spring-boot-starter-security包，开启安全认证功能，需要配置spring.security.user.name|password来通过登录页面登入监控服务器，带验证的监控服务器需要将自身排除去监控列表，通过spring.boot.discovery.ignored-services:服务名称。
 
+带认证的监控服务器还需要配置SpringSecurity，以便监控客户端能够注册。
 
+```java
+package com.edward1iao.springcloud.adminsecurityserver.config;
 
+import de.codecentric.boot.admin.server.config.AdminServerProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
+@Configuration
+public class SecuritySecureConfig extends WebSecurityConfigurerAdapter {
+    private Logger logger = LoggerFactory.getLogger(SecuritySecureConfig.class);
 
+    private final String adminContextPath;
 
+    public SecuritySecureConfig(AdminServerProperties adminServerProperties) {
+        this.adminContextPath = adminServerProperties.getContextPath();
+        logger.info("adminContextPath:{}",adminContextPath);
+    }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+        successHandler.setTargetUrlParameter("redirectTo");
+        successHandler.setDefaultTargetUrl(adminContextPath + "/");
+
+        http.authorizeRequests()
+                //1.配置所有静态资源和登录页可以公开访问
+                .antMatchers(adminContextPath + "/assets/**").permitAll()
+                .antMatchers(adminContextPath + "/login").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                //2.配置登录和登出路径
+                .formLogin().loginPage(adminContextPath + "/login").successHandler(successHandler).and()
+                .logout().logoutUrl(adminContextPath + "/logout").and()
+                //3.开启http basic支持，admin-client注册时需要使用
+                .httpBasic().and()
+                .csrf()
+                //4.开启基于cookie的csrf保护
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                //5.忽略这些路径的csrf保护以便admin-client注册
+                .ignoringAntMatchers(
+                        adminContextPath + "/instances",
+                        adminContextPath + "/actuator/**"
+                );
+    }
+}
+```
+
+监控客户端需要配置management.endpoints.web.exposure.include:*以及management.endpoint.health.show-details:always开启监控指标，logging.file.name=xxx.log开启admin的日志监控
 
 
 
