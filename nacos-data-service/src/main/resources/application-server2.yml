@@ -1,0 +1,13 @@
+server:
+  port: 8207
+spring:
+  application:
+    name: nacos-data-service
+  cloud:
+    discovery:
+      server-addr: localhost:8848 #配置nacos地址
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

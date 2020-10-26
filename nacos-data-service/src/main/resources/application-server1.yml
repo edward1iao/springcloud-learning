@@ -1,0 +1,17 @@
+server:
+  port: 8206
+spring:
+  application:
+    name: aaa
+  cloud:
+    discovery:
+      server-addr: localhost:8848 #配置nacos地址
+    nacos:
+      config:
+        file-extension: yaml
+        prefix: aaa
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
